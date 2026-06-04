@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const dotColors = [
   "bg-teal-500",
@@ -8,7 +8,30 @@ const dotColors = [
   "bg-red-400"
 ];
 
+function ConfirmDeleteModal({ onConfirm, onCancel }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={onCancel}>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-800 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Delete session</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone.</p>
+          </div>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <button onClick={onCancel} className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Cancel</button>
+          <button onClick={onConfirm} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Delete</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TaskList({ tasks, removeTask, markDone }) {
+  const [deleteIndex, setDeleteIndex] = useState(null);
   return (
     <div className="space-y-3">
       {tasks.length === 0 && (
@@ -33,7 +56,7 @@ export default function TaskList({ tasks, removeTask, markDone }) {
               <button onClick={()=>markDone(i)} className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300" title="Mark Done">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
               </button>
-              <button onClick={()=>removeTask(i)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
+              <button onClick={()=>setDeleteIndex(i)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
@@ -50,6 +73,16 @@ export default function TaskList({ tasks, removeTask, markDone }) {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
           Add another session
         </button>
+      )}
+
+      {deleteIndex !== null && (
+        <ConfirmDeleteModal
+          onConfirm={() => {
+            removeTask(deleteIndex);
+            setDeleteIndex(null);
+          }}
+          onCancel={() => setDeleteIndex(null)}
+        />
       )}
     </div>
   );
