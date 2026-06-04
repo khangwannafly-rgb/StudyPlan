@@ -38,3 +38,33 @@ export function heatmapValues(tasksLog = []) {
     return { date: d, count: minutes > 0 ? Math.ceil(minutes / 15) : 0 };
   });
 }
+
+export function thisWeekStats(tasksLog = []) {
+  const days = getLastNDays(7);
+  const weeklyLogs = tasksLog.filter((t) => days.includes(t.date));
+  
+  const totalMinutes = weeklyLogs.reduce((s, t) => s + (t.minutes || 0), 0);
+  const longestSession = weeklyLogs.reduce((max, t) => Math.max(max, t.minutes || 0), 0);
+  
+  const subjectMap = {};
+  weeklyLogs.forEach((t) => {
+    const s = t.subject || "Other";
+    subjectMap[s] = (subjectMap[s] || 0) + (t.minutes || 0);
+  });
+  
+  let mostStudied = "None";
+  let maxTime = 0;
+  Object.entries(subjectMap).forEach(([subj, time]) => {
+    if (time > maxTime) {
+      maxTime = time;
+      mostStudied = subj;
+    }
+  });
+
+  return {
+    totalMinutes,
+    longestSession,
+    mostStudied,
+    completedSessions: weeklyLogs.length
+  };
+}
