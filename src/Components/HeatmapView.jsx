@@ -33,23 +33,23 @@ export default function HeatmapView({ values }) {
           ry: 3px;
         }
 
-        /* Light Mode – GitHub/LeetCode green scale */
-        rect.heat-0 { fill: #ebedf0 !important; }
-        rect.heat-1 { fill: #9be9a8 !important; }
-        rect.heat-2 { fill: #40c463 !important; }
-        rect.heat-3 { fill: #30a14e !important; }
-        rect.heat-4 { fill: #216e39 !important; }
+        /* Light Mode – Teal scale */
+        rect.heat-0 { fill: #f3f4f6 !important; }
+        rect.heat-1 { fill: #99f6e4 !important; }
+        rect.heat-2 { fill: #2dd4bf !important; }
+        rect.heat-3 { fill: #0d9488 !important; }
+        rect.heat-4 { fill: #115e59 !important; }
 
-        /* Dark Mode – GitHub dark green scale */
+        /* Dark Mode – Teal scale */
         html.dark .react-calendar-heatmap text { fill: #9ca3af; }
-        html.dark rect.heat-0 { fill: #161b22 !important; }
-        html.dark rect.heat-1 { fill: #0e4429 !important; }
-        html.dark rect.heat-2 { fill: #006d32 !important; }
-        html.dark rect.heat-3 { fill: #26a641 !important; }
-        html.dark rect.heat-4 { fill: #39d353 !important; }
+        html.dark rect.heat-0 { fill: #1f2937 !important; }
+        html.dark rect.heat-1 { fill: #134e4a !important; }
+        html.dark rect.heat-2 { fill: #0f766e !important; }
+        html.dark rect.heat-3 { fill: #14b8a6 !important; }
+        html.dark rect.heat-4 { fill: #5eead4 !important; }
 
         .react-calendar-heatmap rect:hover {
-          stroke: #818cf8;
+          stroke: #0f766e;
           stroke-width: 1px;
           transition: all 0.2s ease-in-out;
         }
