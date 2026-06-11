@@ -33,19 +33,28 @@ export default function Home() {
   }
 
   // format total minutes to hours and mins
-  const formatTime = (mins) => {
+    const formatTime = (mins) => {
     if (mins < 60) return `${mins}m`;
     const h = Math.floor(mins / 60);
     const m = mins % 60;
     return m > 0 ? `${h}h ${m}m` : `${h}h`;
   };
 
+  // --- NEW: Calculate dynamic greeting based on local time ---
+  const currentHour = new Date().getHours();
+  let greeting = "Good evening,"; // Default (5:00 PM - 4:59 AM)
+  if (currentHour >= 5 && currentHour < 12) {
+    greeting = "Good morning,";   // 5:00 AM - 11:59 AM
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greeting = "Good afternoon,"; // 12:00 PM - 4:59 PM
+  }
+
   return (
     <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
       {/* Hero Header */}
       <header className="mb-8 bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col md:flex-row relative">
         <div className="p-8 md:p-10 flex-1 z-10 flex flex-col justify-center">
-          <h2 className="text-2xl text-gray-800 dark:text-gray-200 font-medium">Good evening,</h2>
+          <h2 className="text-2xl text-gray-800 dark:text-gray-200 font-medium">{greeting}</h2>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mt-2 flex items-center gap-2 tracking-tight">
             {profile.name || "Shivangini"} <span className="text-yellow-400 animate-pulse">✨</span>
           </h1>
