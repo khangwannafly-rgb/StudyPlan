@@ -1,5 +1,10 @@
 # StudySphere
 
+![Stars](https://img.shields.io/github/stars/shivanginigupta573-dev/Study-Sphere?style=for-the-badge)
+![Contributors](https://img.shields.io/github/contributors/shivanginigupta573-dev/Study-Sphere?style=for-the-badge)
+
+⭐ If you find this project useful, consider starring the repository!
+
 StudySphere is a modern student productivity and learning platform designed to help students stay organized, consistent, and focused throughout their academic journey.
 
 The platform combines productivity tracking, study management, and visual analytics to create a smoother and more motivating learning experience for students.
