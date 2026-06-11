@@ -56,7 +56,7 @@ export default function Home() {
         <div className="p-8 md:p-10 flex-1 z-10 flex flex-col justify-center">
           <h2 className="text-2xl text-gray-800 dark:text-gray-200 font-medium">{greeting}</h2>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mt-2 flex items-center gap-2 tracking-tight">
-            {profile.name || "Shivangini"} <span className="text-yellow-400 animate-pulse">✨</span>
+            {profile.name || "User"} <span className="text-yellow-400 animate-pulse">✨</span>
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-3 font-medium text-lg">Let's make today a productive one.</p>
         </div>
