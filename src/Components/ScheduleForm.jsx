@@ -21,7 +21,7 @@ export default function ScheduleForm({ addTask }) {
           value={subject} 
           onChange={(e)=>setSubject(e.target.value)} 
           placeholder="e.g. DSA, DBMS, Machine Learning..." 
-          className="flex-1 w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400 text-sm transition-all" 
+          className="flex-1 w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400 text-sm transition-all" 
         />
         
         <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 p-1.5 rounded-xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
@@ -40,7 +40,7 @@ export default function ScheduleForm({ addTask }) {
           </select>
         </div>
         
-        <button type="submit" className="w-full sm:w-auto px-6 py-3 bg-teal-800 text-white font-semibold rounded-xl hover:bg-teal-900 transition-colors duration-300 text-sm shadow-sm">
+        <button type="submit" className="w-full sm:w-auto px-6 py-3 bg-primary-800 text-white font-semibold rounded-xl hover:bg-primary-900 transition-colors duration-300 text-sm shadow-sm">
           Add to Today
         </button>
       </div>

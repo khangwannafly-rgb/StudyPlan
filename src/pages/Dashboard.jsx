@@ -18,7 +18,7 @@ export default function Dashboard() {
   return (
     <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
       <header className="mb-6">
-        <h1 className="text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+        <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400 tracking-tight">
           Analytics Overview
         </h1>
       </header>

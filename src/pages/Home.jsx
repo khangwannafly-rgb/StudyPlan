@@ -81,11 +81,11 @@ export default function Home() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <h3 className="font-bold text-gray-800 dark:text-gray-200">Today's Plan</h3>
-              <span className="bg-teal-50 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 text-xs px-2.5 py-1 rounded-full font-semibold">
+              <span className="bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 text-xs px-2.5 py-1 rounded-full font-semibold">
                 {tasks.length} sessions
               </span>
             </div>
-            <button className="text-teal-600 dark:text-teal-400 text-sm font-semibold hover:underline">View all</button>
+            <button className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline">View all</button>
           </div>
           <TaskList tasks={tasks} removeTask={removeTask} markDone={markDone} />
         </div>
@@ -97,11 +97,11 @@ export default function Home() {
           </div>
           <div className="relative z-10 flex flex-col items-center">
             <div className="w-16 h-16 bg-white/80 dark:bg-[#111827]/80 backdrop-blur-md rounded-2xl mb-6 flex items-center justify-center border border-gray-200 dark:border-gray-700 shadow-lg">
-               <svg className="w-8 h-8 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+               <svg className="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
             </div>
             <h4 className="font-bold text-xl text-gray-800 dark:text-gray-200 mb-2">Ready to focus?</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-8 max-w-[200px]">Eliminate distractions and get deep work done.</p>
-            <Link to="/timer" className="w-full py-3.5 bg-teal-800 hover:bg-teal-900 text-white font-semibold rounded-xl transition-colors shadow-lg block">
+            <Link to="/timer" className="w-full py-3.5 bg-primary-800 hover:bg-primary-900 text-white font-semibold rounded-xl transition-colors shadow-lg block">
               Start Focus Session
             </Link>
           </div>
@@ -120,10 +120,10 @@ export default function Home() {
              <div className="flex items-center gap-1">
                Less 
                <div className="w-3 h-3 rounded bg-gray-100 dark:bg-gray-800 ml-1"></div>
-               <div className="w-3 h-3 rounded bg-teal-200 dark:bg-teal-900"></div>
-               <div className="w-3 h-3 rounded bg-teal-400 dark:bg-teal-700"></div>
-               <div className="w-3 h-3 rounded bg-teal-600 dark:bg-teal-500"></div>
-               <div className="w-3 h-3 rounded bg-teal-800 dark:bg-teal-300"></div>
+               <div className="w-3 h-3 rounded bg-primary-200 dark:bg-primary-900"></div>
+               <div className="w-3 h-3 rounded bg-primary-400 dark:bg-primary-700"></div>
+               <div className="w-3 h-3 rounded bg-primary-600 dark:bg-primary-500"></div>
+               <div className="w-3 h-3 rounded bg-primary-800 dark:bg-primary-300"></div>
                <span className="ml-1">More</span>
              </div>
           </div>
@@ -133,19 +133,19 @@ export default function Home() {
         <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-bold text-gray-800 dark:text-gray-200">This Week</h3>
-            <button className="text-teal-600 dark:text-teal-400 text-sm font-semibold hover:underline">View insights</button>
+            <button className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline">View insights</button>
           </div>
           
           <div className="grid grid-cols-2 gap-6">
             {/* Total Study Time */}
             <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/40 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div className="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-900/40 flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-semibold mb-1">Total Study Time</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{formatTime(stats.totalMinutes)}</p>
-                <p className="text-xs text-teal-600 dark:text-teal-400 font-medium mt-1">↑ 12% from last week</p>
+                <p className="text-xs text-primary-600 dark:text-primary-400 font-medium mt-1">↑ 12% from last week</p>
               </div>
             </div>
             
@@ -189,7 +189,7 @@ export default function Home() {
       </div>
 
       {/* Footer Quote */}
-      <div className="mt-8 bg-[#F5F7F5] dark:bg-teal-900/10 p-5 rounded-2xl flex items-center justify-between border border-teal-100/50 dark:border-teal-900/30 text-teal-800 dark:text-teal-200">
+      <div className="mt-8 bg-[#F5F7F5] dark:bg-primary-900/10 p-5 rounded-2xl flex items-center justify-between border border-primary-100/50 dark:border-primary-900/30 text-primary-800 dark:text-primary-200">
         <div className="flex items-center gap-3">
            <svg className="w-6 h-6 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.714 2.023-9.609 9.983-9.609v3.667c-3.136 0-4.609 1.139-4.882 3.333h4.882v10h-10zm-14.017 0v-7.391c0-5.714 2.023-9.609 9.983-9.609v3.667c-3.136 0-4.609 1.139-4.882 3.333h4.882v10h-10z"/></svg>
            <p className="font-medium">Discipline today, freedom tomorrow.</p>

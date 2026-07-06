@@ -33,23 +33,23 @@ export default function HeatmapView({ values }) {
           ry: 3px;
         }
 
-        /* Light Mode – Teal scale */
+        /* Light Mode – Primary scale */
         rect.heat-0 { fill: #f3f4f6 !important; }
-        rect.heat-1 { fill: #99f6e4 !important; }
-        rect.heat-2 { fill: #2dd4bf !important; }
-        rect.heat-3 { fill: #0d9488 !important; }
-        rect.heat-4 { fill: #115e59 !important; }
+        rect.heat-1 { fill: #c4ded0 !important; }
+        rect.heat-2 { fill: #9ac5b2 !important; }
+        rect.heat-3 { fill: #4b8b74 !important; }
+        rect.heat-4 { fill: #31594b !important; }
 
-        /* Dark Mode – Teal scale */
+        /* Dark Mode – Primary scale */
         html.dark .react-calendar-heatmap text { fill: #9ca3af; }
         html.dark rect.heat-0 { fill: #1f2937 !important; }
-        html.dark rect.heat-1 { fill: #134e4a !important; }
-        html.dark rect.heat-2 { fill: #0f766e !important; }
-        html.dark rect.heat-3 { fill: #14b8a6 !important; }
-        html.dark rect.heat-4 { fill: #5eead4 !important; }
+        html.dark rect.heat-1 { fill: #223b33 !important; }
+        html.dark rect.heat-2 { fill: #28473d !important; }
+        html.dark rect.heat-3 { fill: #3a6f5d !important; }
+        html.dark rect.heat-4 { fill: #6ca891 !important; }
 
         .react-calendar-heatmap rect:hover {
-          stroke: #0f766e;
+          stroke: #3a6f5d;
           stroke-width: 1px;
           transition: all 0.2s ease-in-out;
         }

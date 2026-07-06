@@ -13,7 +13,7 @@ export default function Sidebar({ onNavigate, modalId = "profileModal" }) {
       
       {/* LOGO SECTION */}
       <div className="flex items-center gap-3 px-4 mb-8">
-        <div className="w-8 h-8 rounded-full bg-teal-800 flex items-center justify-center text-white font-bold">
+        <div className="w-8 h-8 rounded-full bg-primary-800 flex items-center justify-center text-white font-bold">
           S
         </div>
         <div>
@@ -39,7 +39,7 @@ export default function Sidebar({ onNavigate, modalId = "profileModal" }) {
             className={({ isActive }) =>
               `px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 text-sm ${
                 isActive
-                  ? "bg-teal-50 text-teal-800 dark:bg-teal-900/40 dark:text-teal-200"
+                  ? "bg-primary-50 text-primary-800 dark:bg-primary-900/40 dark:text-primary-200"
                   : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
               }`
             }
@@ -71,7 +71,7 @@ export default function Sidebar({ onNavigate, modalId = "profileModal" }) {
             {avatar ? (
               <img src={avatar} alt="avatar" className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-teal-800 flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-10 h-10 rounded-full bg-primary-800 flex items-center justify-center text-white font-bold text-sm">
                 {name ? name[0] : "?"}
               </div>
             )}
@@ -93,7 +93,7 @@ export default function Sidebar({ onNavigate, modalId = "profileModal" }) {
           </div>
           <button 
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className={`w-11 h-6 rounded-full transition-colors relative ${theme === "dark" ? "bg-teal-600" : "bg-gray-200"}`}
+            className={`w-11 h-6 rounded-full transition-colors relative ${theme === "dark" ? "bg-primary-600" : "bg-gray-200"}`}
           >
             <div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${theme === "dark" ? "translate-x-6" : "translate-x-1"}`} />
           </button>
@@ -106,17 +106,17 @@ export default function Sidebar({ onNavigate, modalId = "profileModal" }) {
           <h3 className="text-xl font-bold text-center">Edit Profile</h3>
           <div className="space-y-1">
             <label className="text-xs font-semibold text-gray-500 uppercase">Name</label>
-            <input type="text" placeholder="Your Name" defaultValue={name} onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))} className="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <input type="text" placeholder="Your Name" defaultValue={name} onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))} className="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-semibold text-gray-500 uppercase">College</label>
-            <input type="text" placeholder="College" defaultValue={college} onChange={(e) => setProfile((p) => ({ ...p, college: e.target.value }))} className="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <input type="text" placeholder="College" defaultValue={college} onChange={(e) => setProfile((p) => ({ ...p, college: e.target.value }))} className="w-full p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-semibold text-gray-500 uppercase">Avatar</label>
             <input type="file" accept="image/*" onChange={(e) => { const file = e.target.files[0]; const reader = new FileReader(); reader.onload = () => setProfile((p) => ({ ...p, avatar: reader.result })); reader.readAsDataURL(file); }} className="w-full text-sm" />
           </div>
-          <button className="w-full py-3 mt-4 rounded-xl font-bold text-white bg-teal-800 hover:bg-teal-900 transition duration-300">Save Changes</button>
+          <button className="w-full py-3 mt-4 rounded-xl font-bold text-white bg-primary-800 hover:bg-primary-900 transition duration-300">Save Changes</button>
         </form>
       </dialog>
     </aside>

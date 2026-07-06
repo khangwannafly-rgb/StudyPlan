@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const dotColors = [
-  "bg-teal-500",
+  "bg-primary-500",
   "bg-yellow-400",
   "bg-purple-400",
   "bg-blue-400",
@@ -53,7 +53,7 @@ export default function TaskList({ tasks, removeTask, markDone }) {
             </div>
             
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={()=>markDone(i)} className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300" title="Mark Done">
+              <button onClick={()=>markDone(i)} className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" title="Mark Done">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
               </button>
               <button onClick={()=>setDeleteIndex(i)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">

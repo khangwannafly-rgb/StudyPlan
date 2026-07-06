@@ -3,13 +3,22 @@
 
 @theme {
   --font-sans: 'Inter', sans-serif;
+  --color-primary-50: #f2f7f4;
+  --color-primary-100: #e1efe5;
+  --color-primary-200: #c4ded0;
+  --color-primary-300: #9ac5b2;
+  --color-primary-400: #6ca891;
+  --color-primary-500: #4b8b74;
+  --color-primary-600: #3a6f5d;
+  --color-primary-700: #31594b;
+  --color-primary-800: #28473d;
+  --color-primary-900: #223b33;
 }
 
 body { 
   -webkit-font-smoothing: antialiased; 
   -moz-osx-font-smoothing: grayscale; 
   font-family: var(--font-sans);
-  background-color: #FAFAFA;
 }
 
 @layer utilities {

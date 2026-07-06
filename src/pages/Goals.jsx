@@ -45,12 +45,12 @@ export default function Goals() {
   return (
     <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
       <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400 tracking-tight flex items-center gap-2">
           <Target className="w-8 h-8" />
           Your Goals
         </h1>
         {activeGoals.length > 0 && (
-          <span className="bg-teal-50 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 px-3 py-1 rounded-full font-semibold text-sm">
+          <span className="bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 px-3 py-1 rounded-full font-semibold text-sm">
             {activeGoals.length} active
           </span>
         )}
@@ -65,17 +65,17 @@ export default function Goals() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Finish Calculus Course"
-            className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+            className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
           />
           <input
             type="date"
             value={targetDate}
             onChange={(e) => setTargetDate(e.target.value)}
-            className="sm:w-48 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+            className="sm:w-48 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
           />
           <button
             type="submit"
-            className="bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl px-6 py-3 flex items-center justify-center gap-2 transition-colors shrink-0"
+            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl px-6 py-3 flex items-center justify-center gap-2 transition-colors shrink-0"
           >
             <Plus className="w-5 h-5" />
             Add Goal
@@ -86,7 +86,7 @@ export default function Goals() {
       {goals.length === 0 ? (
         <EmptyState
           icon={
-            <Target className="w-10 h-10 text-teal-500 dark:text-teal-400 opacity-80" />
+            <Target className="w-10 h-10 text-primary-500 dark:text-primary-400 opacity-80" />
           }
           title="No goals yet"
           description="Set long-term milestones to stay motivated. Add your first goal above."
@@ -103,7 +103,7 @@ export default function Goals() {
                 {activeGoals.map(goal => (
                   <li key={goal.id} className="p-4 flex items-center justify-between group hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
                     <div className="flex items-center gap-4 flex-1">
-                      <button onClick={() => toggleGoal(goal.id)} className="text-gray-300 hover:text-teal-500 transition-colors shrink-0">
+                      <button onClick={() => toggleGoal(goal.id)} className="text-gray-300 hover:text-primary-500 transition-colors shrink-0">
                         <Circle className="w-6 h-6" />
                       </button>
                       <div>
@@ -130,7 +130,7 @@ export default function Goals() {
                 {completedGoals.map(goal => (
                   <li key={goal.id} className="p-4 flex items-center justify-between group">
                     <div className="flex items-center gap-4 flex-1">
-                      <button onClick={() => toggleGoal(goal.id)} className="text-teal-500 hover:text-gray-400 transition-colors shrink-0">
+                      <button onClick={() => toggleGoal(goal.id)} className="text-primary-500 hover:text-gray-400 transition-colors shrink-0">
                         <CheckCircle2 className="w-6 h-6" />
                       </button>
                       <div>

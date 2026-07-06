@@ -12,7 +12,7 @@ export default function EmptyState({ icon, title, description }) {
   return (
     <div className="bg-white dark:bg-[#111827] p-12 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center transition-colors duration-500 min-h-[400px]">
       <div
-        className="w-20 h-20 bg-teal-50 dark:bg-teal-900/20 rounded-full flex items-center justify-center mb-6"
+        className="w-20 h-20 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mb-6"
         aria-hidden="true"
       >
         {icon}

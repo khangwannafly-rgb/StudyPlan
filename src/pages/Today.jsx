@@ -31,11 +31,11 @@ export default function Today() {
   return (
     <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
       <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+        <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400 tracking-tight">
           Today's Focus
         </h1>
         {todayTasksWithOriginalIndex.length > 0 && (
-          <span className="bg-teal-50 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 px-3 py-1 rounded-full font-semibold text-sm">
+          <span className="bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 px-3 py-1 rounded-full font-semibold text-sm">
             {todayTasksWithOriginalIndex.length} session{todayTasksWithOriginalIndex.length !== 1 ? 's' : ''} planned
           </span>
         )}
@@ -44,7 +44,7 @@ export default function Today() {
       {todayTasksWithOriginalIndex.length === 0 ? (
         <EmptyState
           icon={
-            <svg className="w-10 h-10 text-teal-500 dark:text-teal-400 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <svg className="w-10 h-10 text-primary-500 dark:text-primary-400 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
           }
           title="Nothing scheduled yet"
           description="Your schedule for today is completely clear. Head over to the Home dashboard to plan your upcoming study sessions."

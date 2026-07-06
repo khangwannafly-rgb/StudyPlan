@@ -19,13 +19,13 @@ export default function Footer() {
         </p>
 
         <div className="flex gap-5 text-sm text-neutral-500">
-          <a href="#" className="hover:text-teal-700">
+          <a href="#" className="hover:text-primary-700">
             Privacy
           </a>
-          <a href="#" className="hover:text-teal-700">
+          <a href="#" className="hover:text-primary-700">
             Terms
           </a>
-          <a href="#" className="hover:text-teal-700">
+          <a href="#" className="hover:text-primary-700">
             Contact
           </a>
         </div>
