@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useLocalStorage from "../utils/useLocalStorage";
 import { CheckCircle2, Circle, Trash2, Target, Plus } from "lucide-react";
 import { toast } from "sonner";
+import EmptyState from "../Components/EmptyState";
 
 export default function Goals() {
   const [goals, setGoals] = useLocalStorage("planner_goals", []);
@@ -83,13 +84,13 @@ export default function Goals() {
       </div>
 
       {goals.length === 0 ? (
-        <div className="bg-white dark:bg-[#111827] p-12 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center transition-colors duration-500 min-h-[300px]">
-          <div className="w-20 h-20 bg-teal-50 dark:bg-teal-900/20 rounded-full flex items-center justify-center mb-6">
+        <EmptyState
+          icon={
             <Target className="w-10 h-10 text-teal-500 dark:text-teal-400 opacity-80" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">No goals yet</h2>
-          <p className="text-gray-500 max-w-md">Set long-term milestones to stay motivated. Add your first goal above.</p>
-        </div>
+          }
+          title="No goals yet"
+          description="Set long-term milestones to stay motivated. Add your first goal above."
+        />
       ) : (
         <div className="space-y-6">
           {/* Active Goals */}
