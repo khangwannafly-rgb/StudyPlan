@@ -1,13 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { weeklyHours, subjectDistribution, heatmapValues } from "../utils/calcStats";
-import useLocalStorage from "../utils/useLocalStorage";
 import HeatmapView from "../Components/HeatmapView";
-import LineChart from "../Components/LineChart"
+import LineChart from "../Components/LineChart";
 import DonutChart from "../Components/DonutChart";
 import ProgressBar from "../Components/ProgressBar";
+import Card from "../Components/ui/Card";
+import Widget from "../Components/ui/Widget";
+import Badge from "../Components/ui/Badge";
+import { Sparkles, BarChart3, PieChart, TrendingUp, Target } from "lucide-react";
 
-export default function Dashboard() {
-  const [dummy, setDummy] = useLocalStorage("ignore", 0); // force re-render if needed
+function Dashboard() {
   const logs = JSON.parse(localStorage.getItem("task_logs") || "[]");
 
   const weekly = weeklyHours(logs);
@@ -15,39 +17,84 @@ export default function Dashboard() {
   const heat = heatmapValues(logs);
 
   const totalMinutes = logs.reduce((s, x) => s + (x.minutes || 0), 0);
+  const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
+
   return (
-    <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400 tracking-tight">
-          Analytics Overview
-        </h1>
+    <div className="max-w-5xl mx-auto pb-10 space-y-8">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-primary-600 dark:text-primary-400 tracking-tight font-heading flex items-center gap-2">
+            <Sparkles className="w-8 h-8" />
+            Analytics Overview
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+            Track your study journey with Mochi 📊
+          </p>
+        </div>
+        <Badge variant="primary" className="text-sm px-4 py-1.5 self-start">
+          {totalHours}h total logged
+        </Badge>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-500">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-6">Activity Heatmap</h3>
-          <HeatmapView values={heat} />
-        </div>
+        <Card hoverEffect className="md:col-span-2">
+          <Widget
+            title="Activity Heatmap"
+            subtitle="Last 90 days of study sessions"
+            icon={BarChart3}
+            hoverEffect={false}
+          >
+            <HeatmapView values={heat} />
+          </Widget>
+        </Card>
 
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 flex flex-col justify-center items-center transition-all duration-500">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-6 self-start w-full">Subject Distribution</h3>
-          <div className="w-full max-w-[200px] flex-1 flex items-center justify-center">
-            <DonutChart data={dist} />
-          </div>
-        </div>
+        <Card hoverEffect className="flex flex-col">
+          <Widget
+            title="Subject Distribution"
+            subtitle="Time spent per subject"
+            icon={PieChart}
+            hoverEffect={false}
+          >
+            <div className="w-full max-w-[220px] mx-auto flex-1 flex items-center justify-center py-4">
+              {dist.length > 0 ? (
+                <DonutChart data={dist} />
+              ) : (
+                <p className="text-xs text-gray-400 dark:text-gray-500 font-medium text-center">
+                  No data yet — start studying to see your breakdown!
+                </p>
+              )}
+            </div>
+          </Widget>
+        </Card>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-500">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-6">Weekly Hours</h3>
-          <LineChart data={weekly} />
-        </div>
-        
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 flex flex-col justify-center transition-all duration-500">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-6">Goal Progress</h3>
-          <ProgressBar title="Total Time Logged" value={totalMinutes} max={60*10} />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card hoverEffect>
+          <Widget
+            title="Weekly Hours"
+            subtitle="Study time per day this week"
+            icon={TrendingUp}
+            hoverEffect={false}
+          >
+            <LineChart data={weekly} />
+          </Widget>
+        </Card>
+
+        <Card hoverEffect className="flex flex-col justify-center">
+          <Widget
+            title="Goal Progress"
+            subtitle="Total time logged toward 10-hour milestone"
+            icon={Target}
+            hoverEffect={false}
+          >
+            <div className="py-4">
+              <ProgressBar title="Total Time Logged" value={totalMinutes} max={60 * 10} />
+            </div>
+          </Widget>
+        </Card>
       </div>
     </div>
   );
 }
+
+export default memo(Dashboard);

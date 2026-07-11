@@ -2,19 +2,25 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ScheduleForm from "../Components/ScheduleForm";
 import TaskList from "../Components/TaskList";
-import HeatmapView from "../Components/HeatmapView";
 import useLocalStorage from "../utils/useLocalStorage";
 import useProfile from "../utils/useProfile";
-import { heatmapValues, thisWeekStats } from "../utils/calcStats";
+import { thisWeekStats } from "../utils/calcStats";
 import { toast } from "sonner";
+import Card from "../Components/ui/Card";
+import Button from "../Components/ui/Button";
+import Progress from "../Components/ui/Progress";
+import Mochi from "../Components/ui/Mochi";
+import Calendar from "../Components/ui/Calendar";
+import { Flame, Trophy, Calendar as CalendarIcon, Clock, Sparkles, Star, ChevronRight, Award } from "lucide-react";
 
 export default function Home() {
   const { profile } = useProfile();
   const [tasks, setTasks] = useLocalStorage("planner_tasks", []);
   
   const logs = JSON.parse(localStorage.getItem("task_logs") || "[]");
-  const heat = heatmapValues(logs);
   const stats = thisWeekStats(logs);
+
+  const todayDate = new Date().toISOString().slice(0, 10);
 
   function addTask(task) {
     setTasks([...tasks, task]);
@@ -29,173 +35,327 @@ export default function Home() {
     const newLogs = [...logs, { subject: t.subject, minutes: t.minutes, date: t.date }];
     localStorage.setItem("task_logs", JSON.stringify(newLogs));
     removeTask(idx);
-    toast.success("Session logged for analytics!");
+    toast.success("Session logged for analytics! +100 XP 🌸");
   }
 
-  // format total minutes to hours and mins
-    const formatTime = (mins) => {
+  // Calculate study streak
+  const getStreak = (logs) => {
+    if (!logs || logs.length === 0) return 0;
+    const dates = [...new Set(logs.map(l => l.date))].sort().reverse();
+    const today = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    
+    if (dates[0] !== today && dates[0] !== yesterday) return 0;
+    
+    let streak = 0;
+    let currentCheck = new Date(dates[0]);
+    
+    for (let i = 0; i < dates.length; i++) {
+      const d = new Date(dates[i]);
+      const diffTime = Math.abs(currentCheck - d);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0 || diffDays === 1) {
+        streak++;
+        currentCheck = d;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
+
+  const streak = getStreak(logs);
+
+  // Calculate XP (10 XP per minute studied)
+  const totalMinutesStudied = logs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+  const totalXP = totalMinutesStudied * 10;
+  const currentLevel = Math.floor(totalXP / 500) + 1;
+  const xpInCurrentLevel = totalXP % 500;
+
+  // Format total minutes
+  const formatTime = (mins) => {
     if (mins < 60) return `${mins}m`;
     const h = Math.floor(mins / 60);
     const m = mins % 60;
     return m > 0 ? `${h}h ${m}m` : `${h}h`;
   };
 
-  // --- NEW: Calculate dynamic greeting based on local time ---
+  // Greeting
   const currentHour = new Date().getHours();
-  let greeting = "Good evening,"; // Default (5:00 PM - 4:59 AM)
+  let greeting = "Good evening 🌸";
   if (currentHour >= 5 && currentHour < 12) {
-    greeting = "Good morning,";   // 5:00 AM - 11:59 AM
+    greeting = "Good morning 🌸";
   } else if (currentHour >= 12 && currentHour < 17) {
-    greeting = "Good afternoon,"; // 12:00 PM - 4:59 PM
+    greeting = "Good afternoon 🌸";
   }
 
+  // Quotes
+  const quotes = [
+    "Mochi believes in you! You can do this! 🌸",
+    "Slow progress is still progress! Keep going 🍡",
+    "Focus is a muscle, keep training it! ☕",
+    "Make today your masterpiece! ✨",
+    "You are capable of amazing things! 🌸"
+  ];
+  // Stable random quote index based on the day of the month
+  const quoteIndex = new Date().getDate() % quotes.length;
+  const dailyQuote = quotes[quoteIndex];
+
+  // Daily target progress: e.g. target of 50 mins per day
+  const todayStudyMins = logs
+    .filter(l => l.date === todayDate)
+    .reduce((sum, l) => sum + (l.minutes || 0), 0);
+
+  // Calendar logic (Current week)
+  const getWeekDays = () => {
+    const days = [];
+    const today = new Date();
+    const currentDay = today.getDay();
+    const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + distanceToMonday);
+    
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      days.push(d);
+    }
+    return days;
+  };
+  const weekDays = getWeekDays();
+
+  // Check if a date has study logs
+  const hasLogsForDate = (dateStr) => {
+    return logs.some(l => l.date === dateStr);
+  };
+
+  // Recent activity logs (last 3 entries)
+  const recentLogs = [...logs].reverse().slice(0, 3);
+
   return (
-    <div className="animate-in fade-in duration-500 max-w-5xl mx-auto pb-10">
-      {/* Hero Header */}
-      <header className="mb-8 bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col md:flex-row relative">
-        <div className="p-8 md:p-10 flex-1 z-10 flex flex-col justify-center">
-          <h2 className="text-2xl text-gray-800 dark:text-gray-200 font-medium">{greeting}</h2>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mt-2 flex items-center gap-2 tracking-tight">
-            {profile.name || "User"} <span className="text-yellow-400 animate-pulse">✨</span>
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-3 font-medium text-lg">Let's make today a productive one.</p>
+    <div className="max-w-5xl mx-auto pb-10 space-y-8 font-sans">
+      
+      {/* Premium Hero Header */}
+      <header className="relative bg-gradient-to-r from-primary-200 via-primary-50 to-white dark:from-[#2D2230] dark:via-[#201822] dark:to-[#2D2230] rounded-[30px] border border-primary-100 dark:border-primary-900/30 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_8px_32px_0_rgba(255,95,162,0.06)] overflow-hidden">
+        
+        {/* Sparkles effect in bg */}
+        <div className="absolute top-4 right-1/4 opacity-30 animate-pulse pointer-events-none">
+          <Sparkles className="w-6 h-6 text-primary-400" />
         </div>
         
-        {/* Hero Image */}
-        <div className="md:w-1/2 relative h-48 md:h-auto">
-           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#111827] dark:via-[#111827]/80 to-transparent z-10"></div>
-           <img 
-             src="/study_desk_hero.png" 
-             alt="Aesthetic study desk" 
-             className="absolute inset-0 w-full h-full object-cover object-center"
-           />
+        <div className="flex-1 space-y-3 text-center md:text-left z-10">
+          <h2 className="text-xl text-primary-600 dark:text-primary-400 font-extrabold tracking-wide uppercase font-heading">
+            {greeting}
+          </h2>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight font-heading">
+            {profile.name || "User"} <span className="inline-block animate-bounce">✨</span>
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 font-medium text-base md:max-w-md">
+            "{dailyQuote}"
+          </p>
+          
+          {/* Level / XP display */}
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+            <span className="bg-primary-500 text-white text-xs font-extrabold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-md shadow-primary-500/20">
+              <Trophy className="w-3.5 h-3.5" />
+              Level {currentLevel}
+            </span>
+            <span className="bg-white/95 dark:bg-[#201822] border border-primary-100 dark:border-primary-900/40 text-primary-600 dark:text-primary-400 text-xs font-bold px-3 py-1.5 rounded-full">
+              {totalXP} Total XP
+            </span>
+          </div>
+        </div>
+
+        {/* Mascot Mochi Cheering */}
+        <div className="relative shrink-0 flex items-center justify-center z-10">
+          <div className="absolute inset-0 bg-primary-200/40 dark:bg-primary-900/20 blur-2xl rounded-full scale-90"></div>
+          <Mochi pose="cheering" size={160} />
         </div>
       </header>
+
+      {/* Stats Quick Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Study Streak */}
+        <Card hoverEffect className="flex flex-col justify-between p-5 text-center">
+          <div className="w-10 h-10 mx-auto rounded-full bg-orange-100 dark:bg-orange-950/40 flex items-center justify-center text-orange-500 mb-3">
+            <Flame className="w-5 h-5" fill="currentColor" />
+          </div>
+          <div>
+            <p className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 font-heading">
+              {streak} Days
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">
+              Study Streak
+            </p>
+          </div>
+        </Card>
+
+        {/* Level XP Bar */}
+        <Card hoverEffect className="flex flex-col justify-between p-5 text-center col-span-1">
+          <div className="w-10 h-10 mx-auto rounded-full bg-yellow-100 dark:bg-yellow-950/40 flex items-center justify-center text-yellow-500 mb-3">
+            <Star className="w-5 h-5" fill="currentColor" />
+          </div>
+          <div className="space-y-1">
+            <Progress value={xpInCurrentLevel} max={500} showPercentage={false} />
+            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">
+              {xpInCurrentLevel}/500 XP to Lvl {currentLevel + 1}
+            </p>
+          </div>
+        </Card>
+
+        {/* Weekly Completed Sessions */}
+        <Card hoverEffect className="flex flex-col justify-between p-5 text-center">
+          <div className="w-10 h-10 mx-auto rounded-full bg-green-100 dark:bg-green-950/40 flex items-center justify-center text-green-500 mb-3">
+            <Award className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 font-heading">
+              {stats.completedSessions}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">
+              Sessions Done
+            </p>
+          </div>
+        </Card>
+
+        {/* Total Weekly Hours */}
+        <Card hoverEffect className="flex flex-col justify-between p-5 text-center">
+          <div className="w-10 h-10 mx-auto rounded-full bg-primary-100 dark:bg-primary-950/40 flex items-center justify-center text-primary-500 mb-3">
+            <Clock className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-2xl font-extrabold text-gray-800 dark:text-gray-100 font-heading">
+              {formatTime(stats.totalMinutes)}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">
+              This Week
+            </p>
+          </div>
+        </Card>
+      </div>
 
       {/* Main Schedule Form */}
       <ScheduleForm addTask={addTask} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/* Today's Plan */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <h3 className="font-bold text-gray-800 dark:text-gray-200">Today's Plan</h3>
-              <span className="bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 text-xs px-2.5 py-1 rounded-full font-semibold">
-                {tasks.length} sessions
-              </span>
-            </div>
-            <button className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline">View all</button>
-          </div>
-          <TaskList tasks={tasks} removeTask={removeTask} markDone={markDone} />
-        </div>
-
-        {/* Focus Session Link */}
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center transition-colors duration-500 relative overflow-hidden group">
-          <div className="absolute inset-0 opacity-10 dark:opacity-20 transition-transform duration-700 group-hover:scale-105">
-             <img src="/study_desk_hero.png" alt="Focus background" className="w-full h-full object-cover blur-sm" />
-          </div>
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="w-16 h-16 bg-white/80 dark:bg-[#111827]/80 backdrop-blur-md rounded-2xl mb-6 flex items-center justify-center border border-gray-200 dark:border-gray-700 shadow-lg">
-               <svg className="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-            </div>
-            <h4 className="font-bold text-xl text-gray-800 dark:text-gray-200 mb-2">Ready to focus?</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-8 max-w-[200px]">Eliminate distractions and get deep work done.</p>
-            <Link to="/timer" className="w-full py-3.5 bg-primary-800 hover:bg-primary-900 text-white font-semibold rounded-xl transition-colors shadow-lg block">
-              Start Focus Session
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Consistency (Heatmap) */}
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-          <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-6">Consistency</h3>
-          <div className="overflow-x-auto pb-2">
-            <HeatmapView values={heat} />
-          </div>
-          <div className="flex justify-between items-center mt-4 text-xs font-semibold text-gray-500">
-             <span><strong className="text-gray-800 dark:text-gray-200">5/7</strong> days studied this week</span>
-             <div className="flex items-center gap-1">
-               Less 
-               <div className="w-3 h-3 rounded bg-gray-100 dark:bg-gray-800 ml-1"></div>
-               <div className="w-3 h-3 rounded bg-primary-200 dark:bg-primary-900"></div>
-               <div className="w-3 h-3 rounded bg-primary-400 dark:bg-primary-700"></div>
-               <div className="w-3 h-3 rounded bg-primary-600 dark:bg-primary-500"></div>
-               <div className="w-3 h-3 rounded bg-primary-800 dark:bg-primary-300"></div>
-               <span className="ml-1">More</span>
-             </div>
-          </div>
-        </div>
-
-        {/* This Week Stats */}
-        <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-gray-800 dark:text-gray-200">This Week</h3>
-            <button className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline">View insights</button>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-6">
-            {/* Total Study Time */}
-            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-900/40 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      {/* Core Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Today's Focus Plan */}
+        <Card className="lg:col-span-2 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <h3 className="font-extrabold text-lg text-primary-700 dark:text-primary-400 font-heading">
+                  Today's Focus 🎯
+                </h3>
+                <span className="bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-xs px-2.5 py-1 rounded-full font-bold">
+                  {tasks.length} planned
+                </span>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 font-semibold mb-1">Total Study Time</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{formatTime(stats.totalMinutes)}</p>
-                <p className="text-xs text-primary-600 dark:text-primary-400 font-medium mt-1">↑ 12% from last week</p>
-              </div>
+              <Link to="/today" className="text-primary-500 hover:text-primary-600 text-xs font-bold flex items-center gap-0.5">
+                View all <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
             
-            {/* Longest Session */}
-            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-yellow-50 dark:bg-yellow-900/40 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 font-semibold mb-1">Longest Session</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{stats.longestSession} min</p>
-                <p className="text-xs text-gray-400 font-medium mt-1">Record</p>
-              </div>
-            </div>
-
-            {/* Most Studied */}
-            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 font-semibold mb-1">Most Studied</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{stats.mostStudied}</p>
-                <p className="text-xs text-gray-400 font-medium mt-1">Focus subject</p>
-              </div>
-            </div>
-
-            {/* Completed sessions */}
-            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/40 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 font-semibold mb-1">Completed</p>
-                <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{stats.completedSessions} sessions</p>
-                <p className="text-xs text-gray-400 font-medium mt-1">Keep going!</p>
-              </div>
-            </div>
+            <TaskList tasks={tasks} removeTask={removeTask} markDone={markDone} />
           </div>
+        </Card>
+
+        {/* Progress Circle & Focus Prompt Side panel */}
+        <div className="space-y-6 flex flex-col justify-between h-full">
+          {/* Progress circle panel */}
+          <Card className="flex flex-col items-center justify-center text-center p-6 flex-1">
+            <h4 className="font-bold text-sm text-primary-700 dark:text-primary-400 font-heading mb-4">
+              Daily Target Progress
+            </h4>
+            <Progress 
+              type="circle" 
+              value={todayStudyMins} 
+              max={60} 
+              size="lg" 
+              showPercentage={true} 
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-4 max-w-[200px]">
+              {todayStudyMins >= 60 
+                ? "Daily goal achieved! Awesome work! 🎉" 
+                : `${60 - todayStudyMins} mins more to reach your daily study goal.`}
+            </p>
+          </Card>
+
+          {/* Start Focus Session banner */}
+          <Card className="bg-gradient-to-br from-primary-500 to-primary-400 text-white p-6 relative overflow-hidden flex flex-col justify-between">
+            <div className="absolute -right-4 -bottom-4 opacity-15">
+              <Clock className="w-28 h-28" />
+            </div>
+            <div className="relative z-10 space-y-3">
+              <h4 className="font-extrabold text-xl font-heading">Ready to study?</h4>
+              <p className="text-xs text-white/90 font-medium leading-relaxed max-w-[200px]">
+                Eliminate distractions, focus with Mochi, and log your hours.
+              </p>
+              <Link to="/timer" className="block pt-2">
+                <Button variant="secondary" className="w-full bg-white text-primary-600 hover:bg-primary-50">
+                  Start Focus Timer
+                </Button>
+              </Link>
+            </div>
+          </Card>
         </div>
+
       </div>
 
-      {/* Footer Quote */}
-      <div className="mt-8 bg-[#F5F7F5] dark:bg-primary-900/10 p-5 rounded-2xl flex items-center justify-between border border-primary-100/50 dark:border-primary-900/30 text-primary-800 dark:text-primary-200">
-        <div className="flex items-center gap-3">
-           <svg className="w-6 h-6 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.714 2.023-9.609 9.983-9.609v3.667c-3.136 0-4.609 1.139-4.882 3.333h4.882v10h-10zm-14.017 0v-7.391c0-5.714 2.023-9.609 9.983-9.609v3.667c-3.136 0-4.609 1.139-4.882 3.333h4.882v10h-10z"/></svg>
-           <p className="font-medium">Discipline today, freedom tomorrow.</p>
-        </div>
-        <svg className="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      {/* Calendar Preview & Recent Activity Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Custom Mini Calendar Week Preview */}
+        <Card className="md:col-span-2">
+          <div className="flex items-center gap-2 mb-6">
+            <CalendarIcon className="w-5 h-5 text-primary-500" />
+            <h3 className="font-extrabold text-lg text-primary-700 dark:text-primary-400 font-heading">
+              Weekly Overview
+            </h3>
+          </div>
+          
+          <Calendar
+            weekDays={weekDays}
+            todayDate={todayDate}
+            hasLogsForDate={hasLogsForDate}
+          />
+        </Card>
+
+        {/* Recent Activity */}
+        <Card>
+          <h3 className="font-extrabold text-lg text-primary-700 dark:text-primary-400 font-heading mb-6">
+            Recent Activity 📜
+          </h3>
+          
+          {recentLogs.length === 0 ? (
+            <div className="text-center py-6 text-gray-400 dark:text-gray-500 text-xs font-semibold">
+              No sessions logged yet.
+            </div>
+          ) : (
+            <ul className="space-y-4">
+              {recentLogs.map((log, idx) => (
+                <li key={idx} className="flex items-center justify-between border-b border-primary-100/20 dark:border-primary-900/10 pb-3 last:border-b-0 last:pb-0">
+                  <div>
+                    <p className="font-bold text-sm text-gray-800 dark:text-gray-200">
+                      {log.subject}
+                    </p>
+                    <p className="text-[10px] text-gray-400 font-medium">
+                      {new Date(log.date).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
+                    </p>
+                  </div>
+                  <span className="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 text-xs font-extrabold px-2.5 py-1 rounded-full border border-primary-100/30">
+                    +{log.minutes}m
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
       </div>
+
     </div>
   );
 }

@@ -1,16 +1,74 @@
-import React from "react";
+import React, { memo } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import ChartContainer from "./ui/ChartContainer";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function DonutChart({ data }) {
-  // data: [{ subject, percent }]
-  const labels = data.map(d => d.subject);
-  const values = data.map(d => d.percent);
-  const colors = [ "#06b6d4", "#8b5cf6", "#f97316", "#ef4444", "#10b981" ];
+const PINK_PALETTE = [
+  "#FF5FA2",
+  "#FF7DB6",
+  "#FFC7DD",
+  "#FF94C8",
+  "#FFEAF5",
+  "#E64A8D",
+];
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  cutout: "65%",
+  plugins: {
+    legend: {
+      position: "bottom",
+      labels: {
+        color: "#FF7DB6",
+        font: { family: "Nunito", size: 11 },
+        padding: 16,
+        usePointStyle: true,
+        pointStyle: "circle",
+      },
+    },
+    tooltip: {
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      titleColor: "#201822",
+      bodyColor: "#FF5FA2",
+      borderColor: "#F5D8E6",
+      borderWidth: 1,
+      cornerRadius: 12,
+      padding: 12,
+      titleFont: { family: "Fredoka", weight: "bold", size: 13 },
+      bodyFont: { family: "Nunito", size: 12 },
+    },
+  },
+  animation: {
+    animateRotate: true,
+    duration: 900,
+    easing: "easeOutQuart",
+  },
+};
+
+function DonutChart({ data }) {
+  const labels = data.map((d) => d.subject);
+  const values = data.map((d) => d.percent);
   const dataset = {
     labels,
-    datasets: [{ data: values, backgroundColor: colors.slice(0, values.length) }]
+    datasets: [
+      {
+        data: values,
+        backgroundColor: PINK_PALETTE.slice(0, values.length),
+        borderColor: "#FFFFFF",
+        borderWidth: 3,
+        hoverOffset: 8,
+      },
+    ],
   };
-  return <div className="p-4 rounded bg-white/40 dark:bg-gray-800/60 border"><Doughnut data={dataset} /></div>;
+
+  return (
+    <ChartContainer>
+      <Doughnut data={dataset} options={chartOptions} />
+    </ChartContainer>
+  );
 }
+
+export default memo(DonutChart);

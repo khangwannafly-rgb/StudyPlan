@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, ChevronDown } from "lucide-react";
+import { Play, Pause, RotateCcw, ChevronDown, Coffee } from "lucide-react";
+import Button from "./ui/Button";
+import Card from "./ui/Card";
+import Mochi from "./ui/Mochi";
 
-/**
- * Props:
- * - onComplete(sessionMinutes, subject)
- * - defaultMinutes
- */
 export default function TimerWidget({
   onComplete,
   defaultMinutes = 25,
@@ -43,33 +41,45 @@ export default function TimerWidget({
     }
   }, [seconds, running, minutes, subject, onComplete]);
 
+  // Calculate circular progress dash offset
+  const totalSeconds = minutes * 60;
+  const progress = (seconds / totalSeconds);
+  const radius = 120;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - progress * circumference;
+
   function format(s) {
     const mm = String(Math.floor(s / 60)).padStart(2, "0");
     const ss = String(s % 60).padStart(2, "0");
-
     return `${mm}:${ss}`;
   }
 
   return (
-    <div className="flex flex-col items-center p-12 lg:p-24 bg-white dark:bg-[#111827] rounded-3xl mt-2 relative border border-gray-100 dark:border-gray-800 shadow-sm transition-colors duration-500">
+    <Card className="flex flex-col items-center p-8 md:p-12 max-w-2xl mx-auto shadow-2xl relative overflow-hidden select-none">
       
+      {/* Background soft pink glow */}
+      <div className="absolute top-0 left-0 w-32 h-32 bg-primary-200/20 dark:bg-primary-950/20 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary-200/20 dark:bg-primary-950/20 blur-3xl rounded-full"></div>
+
       {/* Subject Selector */}
-      <div className="mb-8 w-full flex justify-center group relative">
-        <select
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          className="appearance-none text-xl font-bold bg-transparent text-center focus:outline-none border-b-2 border-transparent hover:border-primary-200 dark:hover:border-primary-800 pb-1 text-primary-600 dark:text-primary-400 cursor-pointer pr-6 tracking-wide transition-colors"
-        >
-          <option>General</option>
-          <option>DSA</option>
-          <option>Math</option>
-          <option>ML</option>
-        </select>
-        <ChevronDown className="w-5 h-5 text-primary-400 absolute right-[calc(50%-3rem)] top-1 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity" />
+      <div className="mb-6 w-full flex justify-center group relative z-10">
+        <div className="relative inline-block bg-primary-50 dark:bg-[#201822] px-6 py-2.5 rounded-full border border-primary-100 dark:border-primary-900/40">
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="appearance-none text-base font-extrabold bg-transparent text-center focus:outline-none text-primary-600 dark:text-primary-400 cursor-pointer pr-5 tracking-wide font-heading"
+          >
+            <option>General</option>
+            <option>DSA</option>
+            <option>Math</option>
+            <option>ML</option>
+          </select>
+          <ChevronDown className="w-4 h-4 text-primary-400 absolute right-4 top-3.5 pointer-events-none opacity-80" />
+        </div>
       </div>
 
       {/* Session Presets */}
-      <div className="flex gap-3 mb-12 flex-wrap justify-center">
+      <div className="flex gap-2.5 mb-8 flex-wrap justify-center relative z-10">
         {[25, 50, 90].map((preset) => (
           <button
             key={preset}
@@ -78,10 +88,10 @@ export default function TimerWidget({
               setMinutes(preset);
               setSeconds(preset * 60);
             }}
-            className={`px-5 py-2 rounded-full transition-all duration-300 text-sm font-semibold tracking-wide ${
+            className={`px-4 py-2 rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-wider cursor-pointer border ${
               minutes === preset
-                ? "bg-primary-600 text-white shadow-md shadow-primary-500/20"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                ? "bg-gradient-to-r from-primary-500 to-primary-400 text-white border-transparent shadow-md shadow-primary-500/20"
+                : "bg-white/50 dark:bg-[#2D2230]/50 border-primary-100 dark:border-primary-900/20 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20"
             }`}
           >
             {preset} min
@@ -89,38 +99,75 @@ export default function TimerWidget({
         ))}
       </div>
 
-      {/* Timer Text */}
-      <div className="text-[7rem] md:text-[11rem] font-bold tracking-tighter tabular-nums leading-none mb-14 text-gray-800 dark:text-gray-100 transition-colors duration-500">
-        {format(seconds)}
+      {/* Grid of Mascot and Timer */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full mb-8 relative z-10">
+        
+        {/* Animated Circular Timer Display */}
+        <div className="relative flex items-center justify-center w-[270px] h-[270px] shrink-0">
+          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 270 270">
+            {/* Background circle */}
+            <circle
+              cx="135"
+              cy="135"
+              r={radius}
+              className="stroke-primary-50 dark:stroke-primary-950 fill-none"
+              strokeWidth="12"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="135"
+              cy="135"
+              r={radius}
+              className="stroke-primary-500 fill-none transition-all duration-300 ease-out"
+              strokeWidth="12"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+            />
+          </svg>
+          
+          {/* Timer text inside the circle */}
+          <div className="absolute text-5xl font-extrabold tracking-tighter tabular-nums text-gray-800 dark:text-gray-100 font-heading">
+            {format(seconds)}
+          </div>
+        </div>
+
+        {/* Mascot Mochi State Indicator */}
+        <div className="flex flex-col items-center justify-center text-center space-y-2 bg-primary-50/20 dark:bg-primary-900/10 p-4 rounded-[24px] border border-primary-100/30 dark:border-primary-900/10 w-full max-w-[200px]">
+          <Mochi pose={running ? "studying" : "happy"} size={110} />
+          <div>
+            <p className="text-xs font-bold text-primary-700 dark:text-primary-400 font-heading">
+              {running ? "Deep Focus Mode!" : "Let's start study!"}
+            </p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">
+              {running ? "Mochi is studying with you..." : "Mochi is waiting for you"}
+            </p>
+          </div>
+        </div>
+
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4">
-        <button
+      <div className="flex gap-4 w-full justify-center relative z-10">
+        <Button
           onClick={() => setRunning(!running)}
-          className={`w-40 py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
-            running
-              ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-500 dark:hover:bg-yellow-900/50"
-              : "bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-600/20"
-          }`}
+          variant={running ? "secondary" : "primary"}
+          className="w-36 py-3.5"
         >
-          {running ? (
-            <><Pause className="w-5 h-5" /> Pause</>
-          ) : (
-            <><Play className="w-5 h-5" fill="currentColor" /> Start</>
-          )}
-        </button>
+          {running ? "Pause" : "Start"}
+        </Button>
 
-        <button
+        <Button
           onClick={() => {
             setRunning(false);
             setSeconds(minutes * 60);
           }}
-          className="w-40 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-2xl text-lg transition-colors flex items-center justify-center gap-2"
+          variant="outline"
+          className="w-36 py-3.5"
         >
-          <RotateCcw className="w-5 h-5" /> Reset
-        </button>
+          Reset
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

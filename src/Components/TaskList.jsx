@@ -1,29 +1,45 @@
 import React, { useState } from "react";
+import { Check, Trash2, Clock, MoreVertical, AlertTriangle } from "lucide-react";
+import Button from "./ui/Button";
 
 const dotColors = [
-  "bg-primary-500",
-  "bg-yellow-400",
-  "bg-purple-400",
-  "bg-blue-400",
-  "bg-red-400"
+  "bg-[#FF5FA2]",
+  "bg-[#FF7DB6]",
+  "bg-[#FFC7DD]",
+  "bg-[#FF94C8]",
+  "bg-[#FFEAF5]"
 ];
 
 function ConfirmDeleteModal({ onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={onCancel}>
-      <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-800 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4" 
+      onClick={onCancel}
+    >
+      <div 
+        className="bg-white/95 dark:bg-[#2D2230]/95 rounded-[28px] p-6 shadow-2xl border border-primary-100 dark:border-primary-900/30 max-w-sm w-full animate-in fade-in zoom-in-95 duration-200" 
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-start gap-4 mb-6">
+          <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center text-red-500 shrink-0">
+            <AlertTriangle className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Delete session</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone.</p>
+            <h3 className="font-extrabold text-gray-900 dark:text-white font-heading text-lg">
+              Delete Session?
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1 leading-relaxed">
+              This session will be removed from your today's schedule. This action cannot be undone.
+            </p>
           </div>
         </div>
-        <div className="flex gap-2 justify-end">
-          <button onClick={onCancel} className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Cancel</button>
-          <button onClick={onConfirm} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">Delete</button>
+        <div className="flex gap-3 justify-end">
+          <Button variant="secondary" onClick={onCancel} size="sm">
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={onConfirm} size="sm">
+            Delete
+          </Button>
         </div>
       </div>
     </div>
@@ -35,43 +51,55 @@ export default function TaskList({ tasks, removeTask, markDone }) {
   return (
     <div className="space-y-3">
       {tasks.length === 0 && (
-        <div className="flex flex-col items-center justify-center p-8 text-gray-400 dark:text-gray-500 border border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
-          <span className="font-medium text-sm">No sessions planned yet</span>
+        <div className="flex flex-col items-center justify-center p-8 text-primary-400 dark:text-primary-600 border-2 border-dashed border-primary-100 dark:border-primary-900/20 rounded-[20px] bg-primary-50/10 select-none">
+          <span className="font-bold text-sm tracking-wide">No study sessions planned yet</span>
         </div>
       )}
       {tasks.map((t, i) => (
-        <div key={i} className="group flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-          <div className="flex items-center gap-4">
-            <div className={`w-3 h-3 rounded-full ${dotColors[i % dotColors.length]}`}></div>
-            <h4 className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{t.subject}</h4>
+        <div 
+          key={i} 
+          className="group flex items-center justify-between p-4 bg-white/50 dark:bg-[#2D2230]/40 rounded-[20px] border border-primary-100/50 dark:border-primary-900/20 hover:bg-primary-50/30 dark:hover:bg-primary-950/20 hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-300 shadow-sm"
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-3.5 h-3.5 rounded-full ${dotColors[i % dotColors.length]} border border-white dark:border-[#2D2230] shadow-sm`}></div>
+            <h4 className="font-bold text-gray-800 dark:text-gray-200 text-sm tracking-wide">
+              {t.subject}
+            </h4>
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div className="flex items-center gap-1.5 text-xs text-primary-600 dark:text-primary-400 font-bold bg-primary-50 dark:bg-primary-950/40 px-2.5 py-1.5 rounded-full">
+              <Clock className="w-3.5 h-3.5" />
               {t.minutes} min
             </div>
             
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={()=>markDone(i)} className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" title="Mark Done">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+              <button 
+                onClick={() => markDone(i)} 
+                className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 bg-primary-50 dark:bg-primary-900/20 p-1.5 rounded-full cursor-pointer hover:scale-110 transition-transform" 
+                title="Mark Done"
+              >
+                <Check className="w-4 h-4" strokeWidth={3} />
               </button>
-              <button onClick={()=>setDeleteIndex(i)} className="text-red-500 hover:text-red-600 dark:hover:text-red-400" title="Delete">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <button 
+                onClick={() => setDeleteIndex(i)} 
+                className="text-red-500 hover:text-red-600 dark:hover:text-red-400 bg-red-50 dark:bg-red-950/20 p-1.5 rounded-full cursor-pointer hover:scale-110 transition-transform" 
+                title="Delete"
+              >
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
             
             {/* 3 dots icon for unhovered state to match design */}
-            <div className="group-hover:hidden text-gray-400 px-1">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>
+            <div className="group-hover:hidden text-primary-300 dark:text-primary-700 px-1">
+              <MoreVertical className="w-4 h-4" />
             </div>
           </div>
         </div>
       ))}
       {tasks.length > 0 && (
-        <button className="w-full py-3 mt-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-gray-100 dark:border-gray-800 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-          Add another session
+        <button className="w-full py-3.5 mt-2 text-xs font-bold uppercase tracking-wider text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 border-2 border-dashed border-primary-200 dark:border-primary-800 rounded-[20px] hover:bg-primary-50/20 dark:hover:bg-primary-950/20 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
+          + Add another session
         </button>
       )}
 
